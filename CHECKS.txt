@@ -1,0 +1,25 @@
+# Checks — dumbest-thing-agent-did (v2, after revision)
+# Run 2026-11-24 ~05:43 WIB (2026-11-23 22:43 UTC) by the build session.
+
+Entry line (122 chars, 122 bytes, no trailing newline):
+"My agent deleted /output to tidy up, then failed the whole run because /output was a mount it was never allowed to delete."
+
+1. Node 24 run (local): exit 0, entry.txt 122 bytes.
+2. Node 22.21.1 run (~/workspace/makefun/_tools/node22/bin/node): exit 0,
+   entry.txt byte-identical to the Node 24 run and to the expected line.
+3. Grader simulation: entry copied read-only, run as user nobody (65534)
+   from cwd /, no network (unshare -n), MAKEFUN_OUTPUT_DIR to a writable
+   empty dir holding a stale file: exit 0 in 0.13s, output byte-identical,
+   stale file intact (the output directory itself is never deleted).
+4. Negative tests (copies outside the repo, Node 22.21.1):
+   - line of 271 chars -> exit 1 ("line is 271 characters, must be 1-200")
+   - embedded newline -> exit 1 ("line must not contain control characters")
+   - leading space -> exit 1 ("line must not start or end with whitespace")
+5. Determinism: two Node 22.21.1 runs write byte-identical entry.txt.
+6. No fetch / randomness / clock in main.ts (only the word "randomness"
+   in a comment); reads no network, no clock, no randomness.
+
+Revision history: v1 wrote the line with basic gate checks; v2 (this
+version) added the real revision — minimum 2 words, terminal
+punctuation, no leading/trailing whitespace — then all checks above
+were re-run on v2.
